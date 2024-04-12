@@ -11,8 +11,18 @@
 
 #include "RB9603.h"
 
+//============================= 2. Variables ============================================
 
-//======================= 2. Function Prototypes ==================================
+uint8_t IR_RX_Buffer[RX_BUFFER_SIZE];
+uint8_t IR_TX_Buffer[TX_BUFFER_SIZE];
+uint8_t RM_Buffer[RM_BUFFER_SIZE];
+int8_t IR_RX_Flag;				//Flag showing status of USART DMA Recieve
+int8_t IR_TIM_IDLE_Timeout;		//Flag showing status of Reciever Timout
+Session_t Session_Flag;			//Flag showing if the AT command is a special command
+uint32_t IR_length;			//Recieved USART data length
+uint32_t msg_len;				//AT return message length
+
+//======================= 3. Function Prototypes ==================================
 
 /*
  * Function Name void  Clear_Buffer(uint8_t *buffer,uint32_t size);
@@ -85,54 +95,6 @@ static HAL_StatusTypeDef MX_USART3_UART_Init(void);
 static HAL_StatusTypeDef MX_TIM3_Init(void);
 
 //======================= 3. Static Function Definition ==================================
-
-/**
-  * @brief USART3 Initialization Function
-  * @param None
-  * @retval None
-  */
-static HAL_StatusTypeDef MX_USART3_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART3_Init 0 */
-
-  /* USER CODE END USART3_Init 0 */
-
-  /* USER CODE BEGIN USART3_Init 1 */
-
-  /* USER CODE END USART3_Init 1 */
-  huart3.Instance = USART3;
-  huart3.Init.BaudRate = 19200;
-  huart3.Init.WordLength = UART_WORDLENGTH_8B;
-  huart3.Init.StopBits = UART_STOPBITS_1;
-  huart3.Init.Parity = UART_PARITY_NONE;
-  huart3.Init.Mode = UART_MODE_TX_RX;
-  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
-  huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart3.Init.ClockPrescaler = UART_PRESCALER_DIV1;
-  huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_UART_Init(&huart3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetTxFifoThreshold(&huart3, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetRxFifoThreshold(&huart3, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_DisableFifoMode(&huart3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART3_Init 2 */
-
-  /* USER CODE END USART3_Init 2 */
-
-}
 
 /**
   * Enable DMA controller clock
@@ -346,7 +308,7 @@ IR_Status_t IR_Init_Module(void)
 	 if(MX_GPIO_Init() != HAL_OK){return IR_Pin_CFG_Error;}
 	 HAL_GPIO_WritePin(IR_OnOff_GPIO_Port,IR_OnOff_Pin,SET);
 	 if(MX_DMA_Init()  != HAL_OK){return IR_Pin_CFG_Error;}
-	 if(MX_USART3_UART_Init()!= HAL_OK){return IR_Pin_CFG_Error;}
+	 //if(MX_USART3_UART_Init()!= HAL_OK){return IR_Pin_CFG_Error;}
 	 if(MX_TIM3_Init()!= HAL_OK){return IR_Pin_CFG_Error;}
 
 

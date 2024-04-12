@@ -88,6 +88,8 @@
 
 #include "stdlib.h"				//additional memset
 
+#include "main.h"
+
 typedef enum
 {
 	IR_OK,
@@ -188,23 +190,23 @@ typedef struct
 #define ASCII_MSG_BYTE_LEN 9					//Number of Bytes in  the string "AT+SBDWT="
 
 //========================== 4. Global Variables ==========================================
-int8_t IR_RX_Flag;				//Flag showing status of USART DMA Recieve
-int8_t IR_TIM_IDLE_Timeout;		//Flag showing status of Reciever Timout
-Session_t Session_Flag;			//Flag showing if the AT command is a special command
-uint32_t IR_length;			//Recieved USART data length
-uint32_t msg_len;				//AT return message length
+extern int8_t IR_RX_Flag;				//Flag showing status of USART DMA Recieve
+extern int8_t IR_TIM_IDLE_Timeout;		//Flag showing status of Reciever Timout
+extern Session_t Session_Flag;			//Flag showing if the AT command is a special command
+extern uint32_t IR_length;			//Recieved USART data length
+extern uint32_t msg_len;				//AT return message length
 
 //============================= 5. Handlers =============================================
-UART_HandleTypeDef huart3;
-DMA_HandleTypeDef hdma_usart3_rx;
-TIM_HandleTypeDef htim3;
-DMA_HandleTypeDef hdma_memtomem_dma1_channel2;
+extern UART_HandleTypeDef huart3;
+extern DMA_HandleTypeDef hdma_usart3_rx;
+extern TIM_HandleTypeDef htim3;
+extern DMA_HandleTypeDef hdma_memtomem_dma1_channel2;
 
 //============================ 6. Data Buffers ==========================================
 
-uint8_t IR_RX_Buffer[RX_BUFFER_SIZE];
-uint8_t IR_TX_Buffer[TX_BUFFER_SIZE];
-uint8_t RM_Buffer[RM_BUFFER_SIZE];
+extern uint8_t IR_RX_Buffer[RX_BUFFER_SIZE];
+extern uint8_t IR_TX_Buffer[TX_BUFFER_SIZE];
+extern uint8_t RM_Buffer[RM_BUFFER_SIZE];
 
 //======================== 7. Functions Prototypes =======================================
 
